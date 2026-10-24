@@ -6,3 +6,5 @@ logs/
 data/bot.db
 data/tts_cache/
 .pytest_cache/
+.idea/
+data/backups/

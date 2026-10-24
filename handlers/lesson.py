@@ -11,7 +11,7 @@ from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMar
 from config import Config
 from db.repo import Repo
 from handlers import review, talk
-from handlers.helpers import build_system, error_text, get_user, say
+from handlers.helpers import build_system, error_text, get_user, say, track
 from services import curriculum
 from services.exercises import check_translation
 from services.gemini import GeminiService
@@ -111,6 +111,7 @@ async def process_answer(message: Message, state: FSMContext, repo: Repo, gemini
             return
     else:
         check = AnswerCheck(correct=False)
+    await track(repo, message, user["user_id"], 1)
 
     if check.correct:
         lesson["correct"] += attempt == 1
@@ -185,6 +186,7 @@ async def finish_exercises(message: Message, state: FSMContext, repo: Repo, gemi
 
 
 async def finish_lesson(message: Message, repo: Repo, user: dict, lesson: dict) -> None:
+    await track(repo, message, user["user_id"], points=5, lessons=1)
     stats = await repo.word_stats(user["user_id"])
     lines = ["✅ <b>Урок завершён!</b>", f"Упражнения: {lesson['correct']}/{lesson['total']}"]
     if lesson["passed"] and lesson.get("next_id"):

@@ -1,0 +1,8 @@
+Create 5 short translation exercises Russian -> American English that train the student's most frequent mistakes.
+Mistakes (wrong -> right, how many times):
+{{mistakes}}
+
+Each exercise must force the student to use the correct form from one of the mistakes (cover as many different mistakes as possible), A1 vocabulary, 3-7 words, one clear natural answer.
+
+Return ONLY one JSON object:
+{"exercises": [{"ru": "Russian sentence", "en": "the one best American English translation"}]}

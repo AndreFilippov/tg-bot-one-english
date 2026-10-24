@@ -1,0 +1,9 @@
+Write a listening exercise for the student.
+Topic: {{topic}}
+Student's grammar topic (use it in the text): {{grammar}}
+
+Write a very short story or monologue in American English: 4-6 simple sentences, A1-A2 vocabulary, spoken style, about everyday life.
+Then write 3 multiple-choice comprehension questions about it (in English, short), each with exactly 3 options and the index (0-2) of the correct one.
+
+Return ONLY one JSON object:
+{"story": "text", "questions": [{"q": "question", "options": ["a", "b", "c"], "answer": 0}]}

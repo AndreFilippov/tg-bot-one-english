@@ -1,0 +1,10 @@
+{{input_description}}
+
+Detect the language of the student's phrase (Russian or English) and translate it:
+- Russian -> natural simple American English (A1-A2 vocabulary if possible).
+- English -> Russian.
+If the speech is silent or unintelligible, set "recognized" to false.
+"note" is an optional short note in Russian (at most one sentence) about a useful nuance; empty string if not needed.
+
+Return ONLY one JSON object:
+{"recognized": true, "source_text": "what the student said or wrote", "source_lang": "ru or en", "target_text": "translation", "note": "string"}

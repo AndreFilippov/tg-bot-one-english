@@ -6,7 +6,7 @@ from aiogram.types import FSInputFile, InlineKeyboardMarkup, Message, User
 
 from config import Config
 from db.repo import Repo
-from services import curriculum
+from services import clock, curriculum, profile, progress
 from services.audio import AudioError
 from services.gemini import GeminiError, GeminiRateLimit
 from services.prompts import render
@@ -42,7 +42,23 @@ async def build_system(repo: Repo, user: dict, topic_id: str | None = None) -> s
         topic=f"{topic['title']} ({topic['focus']})",
         mistakes="; ".join(f"{m['wrong']} -> {m['right']}" for m in mistakes) or "none yet",
         words=", ".join(words) or "none yet",
+        explain_lang=profile.explain_lang(user),
+        role=profile.role_prompt(user),
+        profile=profile.profile_for_prompt(user),
     )
+
+
+async def track(repo: Repo, message: Message, user_id: int, points: int = 1, lessons: int = 0) -> None:
+    """Записывает активность. При первом достижении дневной цели поздравляет и показывает серию."""
+    before, after = await repo.add_activity(user_id, points, lessons)
+    goal = (await repo.get_or_create_user(user_id))["daily_goal"] or 20
+    if before < goal <= after:
+        days = await repo.activity_days(user_id)
+        n = progress.streak(days, goal, clock.today_date())
+        try:
+            await message.answer(f"🎯 Дневная цель выполнена ({after}/{goal})! Серия: {n} дн. подряд 🔥")
+        except Exception:
+            log.exception("goal message failed")
 
 
 async def say(message: Message, tts: TTSService, user: dict, text: str, *, rate: int | None = None,

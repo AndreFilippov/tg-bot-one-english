@@ -1,0 +1,3 @@
+The student wants to add this to the vocabulary: "{{text}}"
+Give the English word or phrase (if the student wrote Russian, translate it into American English; if English, keep it), its Russian translation and one very simple example sentence in American English.
+Return ONLY one JSON object: {"word": "english word or phrase", "translation": "Russian", "example": "sentence"}

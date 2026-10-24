@@ -40,8 +40,10 @@ def retry_seconds(e: errors.APIError) -> int:
 
 
 class GeminiService:
-    def __init__(self, api_key: str, model: str, thinking_level: str = "low", fallback_models: list[str] = ()):
+    def __init__(self, api_key: str, model: str, thinking_level: str = "low", fallback_models: list[str] = (),
+                 usage_hook=None):
         self.client = genai.Client(api_key=api_key)
+        self.usage_hook = usage_hook  # async (model) -> None: счётчик запросов за день
         self.models = [model, *[m for m in fallback_models if m and m != model]]
         # "" — не передавать параметр; иначе minimal/low/medium/high (зависит от модели)
         self.thinking_level = thinking_level.upper() if thinking_level else None
@@ -101,6 +103,11 @@ class GeminiService:
                     REQUEST_TIMEOUT,
                 )
                 log.info("Gemini %s ответил за %.1f с", model, time.monotonic() - started)
+                if self.usage_hook:
+                    try:
+                        await self.usage_hook(model)
+                    except Exception:
+                        log.exception("usage hook failed")
                 return resp.text or ""
             except asyncio.TimeoutError:
                 log.warning("Gemini %s не ответил за %d с (попытка %d/%d)", model, REQUEST_TIMEOUT, attempt,

@@ -6,15 +6,19 @@ from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMar
 
 from config import Config
 from db.repo import Repo
+from handlers import profile
 from handlers.helpers import get_user
-from handlers.settings import time_kb
 from services import curriculum
 
 router = Router()
 
 HELP = ("🎙 /talk — голосовой разговор\n📚 /lesson — урок на сегодня\n💬 /chat — переписка\n"
-        "❓ /explain — объяснить правило\n🔤 /words — словарь и повторение\n📝 /test — проверка\n"
-        "⚙️ /settings — настройки\n⏹ /cancel — выйти из режима")
+        "🎤 /repeat — повтори за мной (произношение)\n🎧 /listen — аудирование\n"
+        "🔄 /translate — переводчик (текст и голос)\n❓ /explain — объяснить правило\n"
+        "🔤 /words — словарь и повторение (/add, /due, /export, /import)\n🎯 /weak — мои слабые места\n"
+        "📝 /test — проверка\n📈 /progress — прогресс\n🎚 /level — сменить уровень или тему\n"
+        "👤 /profile — что бот помнит обо мне\n⚙️ /settings — настройки\n🧹 /reset — сброс данных\n"
+        "⏹ /cancel — выйти из режима")
 
 
 class Onboarding(StatesGroup):
@@ -65,12 +69,14 @@ async def on_answer(cb: CallbackQuery, state: FSMContext, repo: Repo) -> None:
         await ask(cb.message, i + 1)
         return
 
-    start_topic = first_fail or curriculum.next_topic_id(questions[-1]["topic"]) or questions[-1]["topic"]
+    start_topic = curriculum.start_topic_for(questions, first_fail)
     await state.clear()
-    await repo.update_user(cb.from_user.id, current_topic=start_topic)
-    title = curriculum.topic_by_id(start_topic)["title"]
-    await cb.message.answer(f"✅ Тест пройден! Начнём с темы: <b>{title}</b>.\n\n"
-                            "Последний шаг — выберите время ежедневного напоминания:", reply_markup=time_kb())
+    topic = curriculum.topic_by_id(start_topic)
+    await repo.update_user(cb.from_user.id, current_topic=start_topic, level=topic["level"])
+    await cb.message.answer(f"✅ Тест пройден! Начнём с темы: <b>{topic['title']}</b>.\n\n"
+                            "Теперь расскажите немного о себе: так я буду общаться интереснее и не стану переспрашивать "
+                            "одно и то же. Любой шаг можно пропустить.")
+    await profile.start_wizard(cb.message, state, onboarding=True)
 
 
 @router.message(Command("help"))

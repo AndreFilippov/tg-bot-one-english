@@ -40,3 +40,24 @@ def test_new_models_parse():
     assert ls.exercises[0].en == "I"
     ts = parse_model('{"questions": [{"topic_id": "to_be", "ru": "я", "en": "I am"}]}', QuizSet)
     assert ts.questions[0].topic_id == "to_be"
+
+
+def test_levels_and_new_data():
+    topics = curriculum.load_topics()
+    assert {t["level"] for t in topics} == {"A1", "A2"}
+    first_a2 = next(t["id"] for t in topics if t["level"] == "A2")
+    assert curriculum.next_topic_id("going_to") == first_a2
+    assert len(curriculum.load_placement()) == 7 and len(curriculum.load_placement(include_a2=True)) == 10
+    assert curriculum.start_topic_for(curriculum.load_placement(), None) == "irregular_verbs"
+    assert all(p["text"] and p["focus"] for p in curriculum.load_pronunciation())
+    assert curriculum.topic_number("alphabet") == (1, len(topics))
+
+
+def test_every_prompt_placeholder_is_known():
+    import re
+    known = {"topic", "mistakes", "words", "explain_lang", "role", "profile", "scenario", "history", "last_reply",
+             "input_description", "mistakes_list", "text", "topic_title", "topic_focus", "ru", "expected", "answer",
+             "attempt", "question", "count", "topics", "phrase", "grammar", "wrong", "right", "explanation"}
+    for path in PROMPTS_DIR.glob("*.txt"):
+        found = set(re.findall(r"\{\{(\w+)\}\}", path.read_text(encoding="utf-8")))
+        assert found <= known, (path.name, found - known)

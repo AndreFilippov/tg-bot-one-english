@@ -10,8 +10,8 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from config import Config
 from db.repo import Repo
-from handlers.helpers import build_system, error_text, get_user, say
-from services import curriculum
+from handlers.helpers import build_system, error_text, get_user, say, track
+from services import curriculum, profile
 from services.audio import download_voice
 from services.gemini import GeminiService
 from services.models import TalkSummary, TalkTurn
@@ -30,12 +30,28 @@ class Talk(StatesGroup):
     active = State()
 
 
-def scenarios_kb() -> InlineKeyboardMarkup:
+def scenarios_kb(user: dict | None = None) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for s in curriculum.load_scenarios().values():
         kb.button(text=f"{s['emoji']} {s['title']}", callback_data=f"sc:{s['id']}")
+    if user and profile.interests_of(user):
+        kb.button(text="⭐ Мои интересы", callback_data="sc:interests")
     kb.adjust(2)
     return kb.as_markup()
+
+
+def interests_scenario(user: dict) -> dict:
+    return {"id": "interests", "emoji": "⭐", "title": "Мои интересы",
+            "goal": f"Talk about the student's interests: {', '.join(profile.interests_of(user))}. "
+                    "Ask easy, specific questions about them (what, when, with whom, why they like it)."}
+
+
+def why_kb(corrections: list) -> InlineKeyboardMarkup | None:
+    if not corrections:
+        return None
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=f"❓ Почему «{c.wrong[:25]}» неверно?", callback_data=f"why:{i}")]
+        for i, c in enumerate(corrections[:3])])
 
 
 def turn_kb() -> InlineKeyboardMarkup:
@@ -77,17 +93,21 @@ async def cmd_talk(message: Message, state: FSMContext, repo: Repo, config: Conf
     await get_user(repo, message.from_user, config)
     await state.clear()
     await state.set_state(Talk.choosing)
-    await message.answer("🎙 Выберите тему разговора:", reply_markup=scenarios_kb())
+    user = await get_user(repo, message.from_user, config)
+    await message.answer("🎙 Выберите тему разговора:", reply_markup=scenarios_kb(user))
 
 
 @router.callback_query(F.data.startswith("sc:"))
 async def pick_scenario(cb: CallbackQuery, state: FSMContext, repo: Repo, gemini: GeminiService,
                         tts: TTSService, config: Config) -> None:
     await cb.answer()
-    scenario = curriculum.load_scenarios().get(cb.data[3:])
+    user = await get_user(repo, cb.from_user, config)
+    if cb.data == "sc:interests":
+        scenario = interests_scenario(user)
+    else:
+        scenario = curriculum.load_scenarios().get(cb.data[3:])
     if not scenario:
         return
-    user = await get_user(repo, cb.from_user, config)
     await cb.message.edit_reply_markup(reply_markup=None)
     await begin_talk(cb.message, state, repo, gemini, tts, user, scenario)
 
@@ -102,7 +122,8 @@ async def handle_answer(message: Message, state: FSMContext, repo: Repo, gemini:
         else:
             input_description = f'The student answered in text: "{text}"'
         prompt = render("talk_turn", scenario=data["goal"], history=format_history(data["history"]),
-                        last_reply=data["last_reply"], input_description=input_description)
+                        last_reply=data["last_reply"], input_description=input_description,
+                        explain_lang=profile.explain_lang(user))
         turn = await gemini.generate_json(TalkTurn, prompt, await build_system(repo, user, data["topic_id"]),
                                           audio=audio)
     except Exception as e:
@@ -125,7 +146,9 @@ async def handle_answer(message: Message, state: FSMContext, repo: Repo, gemini:
         lines.append("✅ Всё правильно!")
     if turn.pronunciation_notes.strip():
         lines.append(f"\n🔊 <b>Произношение:</b> {html.escape(turn.pronunciation_notes)}")
-    await message.answer("\n".join(lines))
+    await message.answer("\n".join(lines), reply_markup=why_kb(turn.corrections))
+    await state.update_data(last_corr=[c.model_dump() for c in turn.corrections[:3]])
+    await track(repo, message, user["user_id"], points=2)
 
     for c in turn.corrections:
         await repo.add_mistake(user["user_id"], c.wrong, c.right, c.explanation, data["session_id"])
@@ -204,6 +227,31 @@ async def on_tr_hint(cb: CallbackQuery, state: FSMContext, repo: Repo, gemini: G
     await cb.message.answer(f"{title}:\n{html.escape(cache[key])}")
 
 
+@router.callback_query(Talk.active, F.data.startswith("why:"))
+async def on_why(cb: CallbackQuery, state: FSMContext, repo: Repo, gemini: GeminiService, config: Config) -> None:
+    await cb.answer()
+    data = await state.get_data()
+    idx = int(cb.data[4:])
+    corr = (data.get("last_corr") or [])
+    if idx >= len(corr):
+        return
+    c = corr[idx]
+    cache = data.get("aux", {})
+    key = f"why:{c['wrong']}|{c['right']}"
+    try:
+        if key not in cache:
+            user = await get_user(repo, cb.from_user, config)
+            cache[key] = await gemini.generate_text(
+                render("why", wrong=c["wrong"], right=c["right"], explanation=c["explanation"]),
+                await build_system(repo, user, data["topic_id"]))
+            await state.update_data(aux=cache)
+    except Exception as e:
+        log.exception("why failed")
+        await cb.message.answer(error_text(e))
+        return
+    await cb.message.answer(f"❓ <b>{html.escape(c['wrong'])} → {html.escape(c['right'])}</b>\n{html.escape(cache[key])}")
+
+
 @router.callback_query(Talk.active, F.data == "t:end")
 async def on_end(cb: CallbackQuery, state: FSMContext, repo: Repo, gemini: GeminiService, config: Config) -> None:
     await cb.answer()
@@ -226,7 +274,7 @@ async def finish_talk(message: Message, state: FSMContext, repo: Repo, gemini: G
     await message.answer("⏳ Подвожу итоги…")
     try:
         prompt = render("talk_summary", scenario=data["goal"], history=format_history(data["history"]),
-                        mistakes_list="\n".join(data["mistakes"]) or "none")
+                        mistakes_list="\n".join(data["mistakes"]) or "none", explain_lang=profile.explain_lang(user))
         summary = await gemini.generate_json(TalkSummary, prompt, await build_system(repo, user, data["topic_id"]))
     except Exception as e:
         log.exception("summary failed")
@@ -257,6 +305,14 @@ async def finish_talk(message: Message, state: FSMContext, repo: Repo, gemini: G
     await repo.finish_session(data["session_id"], summary.model_dump())
     await state.clear()
     await message.answer("\n\n".join(parts))
+    known = {f.lower() for f in profile.facts_of(user)}
+    for fact in [f.strip() for f in summary.facts if f.strip()][:3]:
+        if fact.lower() in known:
+            continue
+        fact_id = await repo.add_pending_fact(user["user_id"], fact)
+        await message.answer(f"💡 Запомнить о вас: <i>{html.escape(fact)}</i>?", reply_markup=InlineKeyboardMarkup(
+            inline_keyboard=[[InlineKeyboardButton(text="💾 Запомнить", callback_data=f"fk:{fact_id}"),
+                              InlineKeyboardButton(text="🚫 Нет", callback_data=f"fx:{fact_id}")]]))
     if flow.get("lesson"):
         from handlers import lesson
         await lesson.finish_lesson(message, repo, user, flow["lesson"])

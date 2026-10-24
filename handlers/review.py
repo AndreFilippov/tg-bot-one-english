@@ -9,7 +9,7 @@ from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMar
 
 from config import Config
 from db.repo import Repo
-from handlers.helpers import error_text, get_user, say
+from handlers.helpers import error_text, get_user, say, track
 from services import srs, text_match
 from services.audio import download_voice
 from services.gemini import GeminiService
@@ -78,6 +78,7 @@ async def process_answer(message: Message, state: FSMContext, repo: Repo, gemini
     quality, verdict = grade(answer, word["word"]) if answer else (1, "🤷 Ничего страшного.")
     new = srs.review(word["ease"], word["interval"], word["reps"], quality)
     await repo.update_word_srs(word["id"], new.ease, new.interval, new.reps, new.due)
+    await track(repo, message, user["user_id"], 1)
 
     lines = [verdict, f"Правильно: <b>{html.escape(word['word'])}</b> — {html.escape(word['translation'])}"]
     if word["example"]:
