@@ -1,0 +1,7 @@
+Create a weekly check test of {{count}} translation questions Russian -> American English for the student.
+Topics to cover (id: title — focus), spread the questions across them evenly:
+{{topics}}
+
+Return ONLY one JSON object:
+{"questions": [{"topic_id": "id from the list", "ru": "Russian sentence", "en": "the one best American English translation"}]}
+Requirements: short sentences (3-7 words), A1 vocabulary, one clear natural answer each, from easy to harder.

@@ -1,0 +1,3 @@
+Translate this English phrase into Russian. Return ONLY the translation.
+
+{{text}}

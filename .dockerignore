@@ -1,0 +1,8 @@
+.venv/
+.git/
+__pycache__/
+.pytest_cache/
+logs/
+data/tts_cache/
+data/bot.db
+.env

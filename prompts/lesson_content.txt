@@ -1,0 +1,14 @@
+Prepare the grammar part of a daily lesson for the student.
+Topic: {{topic_title}} ({{topic_focus}})
+Words the student already knows (use some of them in examples): {{words}}
+
+Return ONLY one JSON object:
+{
+  "explanation_ru": "short explanation in Russian (4-7 lines): the rule, how to form it, one typical mistake of Russian speakers. Plain text, no markdown.",
+  "examples": [{"en": "very simple American English sentence", "ru": "Russian translation"}],
+  "exercises": [{"ru": "Russian sentence to translate", "en": "the one best American English translation"}]
+}
+Requirements:
+- exactly 3 examples and exactly 5 exercises, all about the topic, A1 vocabulary, short sentences (3-7 words).
+- exercises must have one clear natural answer, ordered from easy to a bit harder.
+- American English spelling and vocabulary.

@@ -1,0 +1,10 @@
+# Короткий тест уровня для /start. Вопросы идут от простых к сложным.
+# topic — тема программы, с которой надо начать, если ответ неверный.
+questions:
+  - {topic: alphabet, q: "Как будет «Привет!» по-английски?", options: ["Hello!", "Thanks!", "Goodbye!"], answer: 0}
+  - {topic: to_be, q: "I ___ a student.", options: ["is", "am", "are"], answer: 1}
+  - {topic: articles, q: "She has ___ apple.", options: ["a", "an", "the"], answer: 1}
+  - {topic: present_simple_aff, q: "He ___ in a bank.", options: ["work", "works", "working"], answer: 1}
+  - {topic: present_simple_q, q: "___ you like coffee?", options: ["Are", "Does", "Do"], answer: 2}
+  - {topic: present_continuous, q: "Right now she ___ a book.", options: ["reads", "is reading", "read"], answer: 1}
+  - {topic: past_regular, q: "Yesterday we ___ soccer.", options: ["play", "played", "playing"], answer: 1}

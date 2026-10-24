@@ -1,0 +1,42 @@
+# Сценарии для /talk. Чтобы добавить новый, допишите блок: id, emoji, title (кнопка), goal (для ИИ).
+scenarios:
+  - id: intro
+    emoji: "👋"
+    title: Знакомство
+    goal: "Meeting a new person for the first time: names, where you are from, nice to meet you."
+  - id: cafe
+    emoji: "☕"
+    title: Кафе
+    goal: "The student orders food and drink in a cafe. You are the waiter."
+  - id: shop
+    emoji: "🛒"
+    title: Магазин
+    goal: "The student buys things in a shop. You are the shop assistant. Prices, colours, sizes."
+  - id: road
+    emoji: "🚌"
+    title: Дорога
+    goal: "The student asks the way in the city and about buses. You are a helpful local person."
+  - id: about_me
+    emoji: "🙋"
+    title: О себе
+    goal: "Ask the student about themselves: age, job or study, home, what they like."
+  - id: family
+    emoji: "👨‍👩‍👧"
+    title: Моя семья
+    goal: "Talk about the student's family: who is in it, names, ages, what they do."
+  - id: my_day
+    emoji: "⏰"
+    title: Мой день
+    goal: "Talk about the student's daily routine: wake up, work, eat, free time, with times."
+  - id: weather
+    emoji: "🌤"
+    title: Погода
+    goal: "Small talk about the weather today, seasons and what to wear."
+  - id: hobby
+    emoji: "🎨"
+    title: Хобби
+    goal: "Talk about hobbies and free time: what the student likes to do and when."
+  - id: free
+    emoji: "💬"
+    title: Свободная тема
+    goal: "Free simple conversation. Start with a simple everyday question and follow the student's interests."

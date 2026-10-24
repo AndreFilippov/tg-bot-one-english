@@ -1,0 +1,4 @@
+Start a spoken role-play with the student.
+Scenario: {{scenario}}
+Write the first line of the conversation partner: 1-2 very short A1 sentences, then one simple question.
+Return ONLY the English text, no quotes, no emoji, no translation.

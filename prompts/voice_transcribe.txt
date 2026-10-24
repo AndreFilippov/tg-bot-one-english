@@ -1,0 +1,3 @@
+Transcribe exactly what the student says in the attached audio (English, a single word or a short phrase). Do not correct or complete it.
+If the audio is silent, unintelligible or not English, set "recognized" to false.
+Return ONLY one JSON object: {"recognized": true, "transcript": "string"}

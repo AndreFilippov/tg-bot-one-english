@@ -1,0 +1,8 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+logs/
+data/bot.db
+data/tts_cache/
+.pytest_cache/

@@ -1,0 +1,13 @@
+Check the student's translation from Russian into English.
+Topic: {{topic}}
+Russian sentence: {{ru}}
+Reference translation: {{expected}}
+Student's answer: {{answer}}
+Attempt number: {{attempt}}
+
+Rules:
+- Any correct natural American English translation counts, not only the reference. Ignore capital letters and final punctuation.
+- If the answer is wrong, "hint" is a gentle hint in Russian that does NOT give the full answer (name the rule or the wrong part). "corrected" is the right sentence. "explanation" is ONE sentence in Russian.
+- If the answer is correct, leave "hint" and "explanation" empty and set "corrected" to the student's sentence.
+
+Return ONLY one JSON object: {"correct": true, "corrected": "string", "hint": "string", "explanation": "string"}

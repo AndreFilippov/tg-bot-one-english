@@ -1,0 +1,16 @@
+The role-play is over. Scenario: {{scenario}}
+
+Full conversation (student lines with the corrections found):
+{{history}}
+
+Mistakes found during the dialogue:
+{{mistakes_list}}
+
+Write a short summary for the Russian-speaking A1 student. Return ONLY one JSON object:
+{
+  "main_mistakes": ["up to 3 main mistakes, each one short sentence in Russian with the wrong and right phrase"],
+  "rules": ["1-2 grammar rules to repeat, in Russian, one sentence each, with an example"],
+  "new_words": [{"word": "string", "translation": "string in Russian", "example": "string"}],
+  "comment": "one encouraging sentence in Russian"
+}
+If there were no mistakes, use empty lists for main_mistakes and rules.

@@ -1,0 +1,6 @@
+The student does not know how to answer the partner's line in the role-play.
+Scenario: {{scenario}}
+Partner's line: "{{text}}"
+
+Write, in Russian, a short hint (one sentence) about what to say, then give ONE example answer in simple A1 English on a new line that starts with "Example:".
+Do not add anything else.

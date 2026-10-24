@@ -1,0 +1,37 @@
+# Программа A1 (американский английский). Темы идут по порядку.
+# id — уникальный ключ; title — название для ученика (по-русски); focus — подсказка для ИИ (по-английски).
+# Чтобы добавить тему, допишите блок в нужное место списка.
+topics:
+  - {id: alphabet, title: "Алфавит и чтение", focus: "English alphabet, letter names, basic sounds, spelling your name, greetings (hello, hi, bye)"}
+  - {id: pronouns, title: "Личные местоимения", focus: "personal pronouns I, you, he, she, it, we, they"}
+  - {id: to_be, title: "Глагол to be (утверждение)", focus: "I am, you are, he/she/it is, we/they are; contractions I'm, you're"}
+  - {id: to_be_neg_q, title: "To be: вопрос и отрицание", focus: "Am I? Are you? Is he? ; I am not, he isn't; short answers Yes, I am / No, I'm not"}
+  - {id: articles, title: "Артикли a / an / the", focus: "a before consonant sounds, an before vowel sounds, the for known things"}
+  - {id: plurals, title: "Множественное число", focus: "regular plural -s/-es, -ies, irregular plurals man-men, child-children"}
+  - {id: this_that, title: "This / that / these / those", focus: "demonstratives for near and far things, singular and plural"}
+  - {id: possessives, title: "Притяжательные: my, your, 's", focus: "my, your, his, her, our, their, and the possessive 's (Tom's book)"}
+  - {id: have_got, title: "Глагол have (have got)", focus: "I have / he has; American style: I have a car, Do you have a pen? ; have got is also fine"}
+  - {id: present_simple_aff, title: "Present Simple: утверждение", focus: "I work, he works; -s/-es endings for he/she/it; daily routine"}
+  - {id: present_simple_neg, title: "Present Simple: отрицание", focus: "I don't like, she doesn't like"}
+  - {id: present_simple_q, title: "Present Simple: вопросы", focus: "Do you like...? Does he work...? short answers Yes, I do / No, he doesn't"}
+  - {id: freq_adverbs, title: "Наречия частоты", focus: "always, usually, often, sometimes, never; place before the main verb"}
+  - {id: can, title: "Модальный глагол can", focus: "can / can't for ability and permission; Can you help me?"}
+  - {id: imperatives, title: "Повелительное наклонение", focus: "Open the door. Don't run. Please sit down. Let's go."}
+  - {id: there_is_are, title: "There is / there are", focus: "There is a..., There are two..., Is there...? Are there...?"}
+  - {id: prep_place, title: "Предлоги места", focus: "in, on, under, next to, between, in front of, behind"}
+  - {id: prep_time, title: "Предлоги времени", focus: "at (time), on (days), in (months, years, morning)"}
+  - {id: numbers, title: "Числа", focus: "numbers 0-100, ordinal numbers first-tenth, phone numbers, prices in dollars"}
+  - {id: time_dates, title: "Время и даты", focus: "telling time (It's three thirty), days of the week, months, dates"}
+  - {id: present_continuous, title: "Present Continuous: утверждение", focus: "I am reading, he is cooking; -ing spelling; now / at the moment"}
+  - {id: present_cont_q_neg, title: "Present Continuous: вопрос и отрицание", focus: "Are you working? I'm not sleeping. What are you doing?"}
+  - {id: adjectives, title: "Прилагательные", focus: "adjectives before nouns and after be: a big house, the house is big; colors, sizes, feelings"}
+  - {id: some_any, title: "Some / any", focus: "some in statements, any in questions and negatives; I'd like some water"}
+  - {id: countable, title: "Исчисляемые и неисчисляемые, much / many", focus: "countable vs uncountable nouns, how much / how many, a lot of"}
+  - {id: object_pronouns, title: "Объектные местоимения", focus: "me, you, him, her, it, us, them: She likes him. Call me."}
+  - {id: like_want, title: "Like, want, would like", focus: "I like..., I want..., I'd like... for ordering and polite requests; like + -ing"}
+  - {id: question_words, title: "Вопросительные слова", focus: "what, where, when, who, why, how, which, whose in simple questions"}
+  - {id: past_be, title: "Past Simple: was / were", focus: "I was, you were; Was he...? He wasn't; yesterday, last week"}
+  - {id: past_regular, title: "Past Simple: правильные глаголы", focus: "-ed endings: worked, played, studied; pronunciation of -ed"}
+  - {id: irregular_verbs, title: "Неправильные глаголы", focus: "go-went, have-had, do-did, see-saw, eat-ate, get-got, make-made, buy-bought, come-came"}
+  - {id: past_neg_q, title: "Past Simple: вопрос и отрицание", focus: "Did you...? I didn't go. What did you do yesterday?"}
+  - {id: going_to, title: "Going to (планы)", focus: "I'm going to visit..., Are you going to...? tomorrow, next week, tonight"}
