@@ -11,8 +11,8 @@ Task:
 1. Find out exactly what the student said (transcript). If the speech is silent, unintelligible or not English at all, set "recognized" to false, leave other fields empty and do not invent a transcript.
 2. Check grammar and vocabulary. Mild, A1-appropriate judgement: ignore capital letters and punctuation.
    Target variety is American English: if the student uses a British word or spelling, add it as a gentle correction to the American form.
-3. For each real mistake give: wrong (what they said), right (corrected phrase), explanation (ONE sentence in Russian).
-4. If you can hear a clear pronunciation problem, describe it in Russian in "pronunciation_notes", otherwise use an empty string. Do not guess when the input was text.
+3. For each real mistake give: wrong (what they said), right (corrected phrase), explanation (ONE sentence, {{explain_lang}}).
+4. If you can hear a clear pronunciation problem, describe it ({{explain_lang}}) in "pronunciation_notes", otherwise use an empty string. Do not guess when the input was text.
 5. List up to 3 useful new English words (A1-A2) that appeared in the dialogue and may be new to the student, with Russian translation and a short example.
 6. Write "reply": the next line of the conversation partner, 1-2 very short A1 sentences, reacting to what the student said and ending with a simple question. Plain English only.
 
@@ -21,8 +21,8 @@ Return ONLY one JSON object with exactly these keys:
   "recognized": true,
   "transcript": "string",
   "is_correct": true,
-  "corrections": [{"wrong": "string", "right": "string", "explanation": "string in Russian"}],
-  "pronunciation_notes": "string in Russian or empty",
-  "new_words": [{"word": "string", "translation": "string in Russian", "example": "string"}],
+  "corrections": [{"wrong": "string", "right": "string", "explanation": "string"}],
+  "pronunciation_notes": "string or empty",
+  "new_words": [{"word": "string", "translation": "Russian translation", "example": "string"}],
   "reply": "string"
 }

@@ -6,11 +6,12 @@ Full conversation (student lines with the corrections found):
 Mistakes found during the dialogue:
 {{mistakes_list}}
 
-Write a short summary for the Russian-speaking A1 student. Return ONLY one JSON object:
+Write a short summary for the student (language of explanations: {{explain_lang}}). Return ONLY one JSON object:
 {
-  "main_mistakes": ["up to 3 main mistakes, each one short sentence in Russian with the wrong and right phrase"],
-  "rules": ["1-2 grammar rules to repeat, in Russian, one sentence each, with an example"],
+  "main_mistakes": ["up to 3 main mistakes, each one short sentence with the wrong and right phrase"],
+  "rules": ["1-2 grammar rules to repeat, one sentence each, with an example"],
   "new_words": [{"word": "string", "translation": "string in Russian", "example": "string"}],
-  "comment": "one encouraging sentence in Russian"
+  "facts": ["up to 3 NEW personal facts the student told about themselves (name, family, pets, job, hobbies, plans), each a short English sentence like \"The student has a cat named Tom\". Empty list if none."],
+  "comment": "one encouraging sentence"
 }
 If there were no mistakes, use empty lists for main_mistakes and rules.

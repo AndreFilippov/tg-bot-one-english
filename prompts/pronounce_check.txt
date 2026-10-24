@@ -1,0 +1,11 @@
+The student tried to repeat this phrase aloud (American English): "{{phrase}}"
+Listen to the attached audio and judge the pronunciation of a Russian speaker at A1 level. Be fair and encouraging but honest.
+
+- recognized: false if the audio is silent or unintelligible.
+- transcript: what you actually heard.
+- score: integer 1-5 (5 = clear and natural, 3 = understandable with noticeable problems, 1 = hard to understand).
+- issues: up to 3 specific problems, each one short sentence ({{explain_lang}}), naming the word and the sound. Empty list if none.
+- tip: one short practical tip ({{explain_lang}}) on how to make the hardest sound.
+
+Return ONLY one JSON object:
+{"recognized": true, "transcript": "string", "score": 4, "issues": ["string"], "tip": "string"}

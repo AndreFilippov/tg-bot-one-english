@@ -8,3 +8,6 @@ questions:
   - {topic: present_simple_q, q: "___ you like coffee?", options: ["Are", "Does", "Do"], answer: 2}
   - {topic: present_continuous, q: "Right now she ___ a book.", options: ["reads", "is reading", "read"], answer: 1}
   - {topic: past_regular, q: "Yesterday we ___ soccer.", options: ["play", "played", "playing"], answer: 1}
+  - {level: A2, topic: comparatives, q: "My bag is ___ than your bag.", options: ["heavy", "heavier", "more heavy"], answer: 1}
+  - {level: A2, topic: present_perfect_exp, q: "I ___ never been to London.", options: ["have", "am", "did"], answer: 0}
+  - {level: A2, topic: will_future, q: "Look at the sky! I think it ___ rain tomorrow.", options: ["will", "is", "does"], answer: 0}

@@ -1,0 +1,6 @@
+The student made a mistake and wants to understand it.
+Wrong: "{{wrong}}"
+Correct: "{{right}}"
+Short explanation they already saw: {{explanation}}
+
+Explain in Russian, at most 6 lines, why the correct form is right: the rule, one more example with Russian translation, and a simple way to remember it. Plain text, no markdown.

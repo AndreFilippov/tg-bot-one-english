@@ -1,0 +1,22 @@
+# Программа A2 (американский английский). Идёт после A1.
+topics:
+  - {id: comparatives, title: "Сравнительная степень", focus: "bigger than, more interesting than, better, worse; as ... as"}
+  - {id: superlatives, title: "Превосходная степень", focus: "the biggest, the most beautiful, the best, the worst"}
+  - {id: present_perfect_exp, title: "Present Perfect: опыт", focus: "I have been to..., Have you ever...? I have never...; American usage"}
+  - {id: present_perfect_just, title: "Present Perfect: already, yet, just", focus: "I have already eaten, Have you finished yet? She has just left"}
+  - {id: will_future, title: "Will: решения и предсказания", focus: "I'll help you, It will rain, I won't forget; offers and promises"}
+  - {id: future_forms, title: "Will или going to", focus: "plans with going to vs spontaneous decisions and predictions with will"}
+  - {id: must_should, title: "Must, have to, should", focus: "must, mustn't, have to, don't have to, should, shouldn't for advice and rules"}
+  - {id: could_would, title: "Could и would: вежливые просьбы", focus: "Could you help me? Would you like some tea? Could I...?"}
+  - {id: adverbs_manner, title: "Наречия образа действия", focus: "slowly, carefully, well, fast, hard; adjective vs adverb"}
+  - {id: past_continuous, title: "Past Continuous", focus: "I was cooking when you called; was/were + -ing"}
+  - {id: past_cont_simple, title: "Past Continuous и Past Simple", focus: "when and while with two past actions"}
+  - {id: conditionals, title: "Условные предложения 0 и 1", focus: "If you heat ice, it melts. If it rains, I will stay home."}
+  - {id: inf_gerund, title: "Инфинитив и -ing после глаголов", focus: "want to go, decide to buy, enjoy swimming, love reading, stop doing"}
+  - {id: quantifiers, title: "Too, enough, a few, a little", focus: "too much, not enough, a few friends, a little time"}
+  - {id: relative_clauses, title: "Who, which, that", focus: "the man who lives here, the book that I read"}
+  - {id: phrasal_basic, title: "Фразовые глаголы", focus: "get up, turn on/off, look for, pick up, give up, put on, take off"}
+  - {id: passive_intro, title: "Пассивный залог (введение)", focus: "English is spoken here. The house was built in 1990."}
+  - {id: used_to, title: "Used to", focus: "I used to live in..., Did you use to...? past habits"}
+  - {id: prep_movement, title: "Предлоги движения", focus: "to, into, out of, through, across, along, up, down, over"}
+  - {id: time_clauses, title: "Союзы времени", focus: "before, after, when, as soon as, until, while"}

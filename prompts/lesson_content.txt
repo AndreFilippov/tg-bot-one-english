@@ -12,3 +12,4 @@ Requirements:
 - exactly 3 examples and exactly 5 exercises, all about the topic, A1 vocabulary, short sentences (3-7 words).
 - exercises must have one clear natural answer, ordered from easy to a bit harder.
 - American English spelling and vocabulary.
+- When natural, base examples and exercises on the student's interests and life (see the profile in the system prompt).

@@ -10,6 +10,7 @@ from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMar
 from config import Config
 from db.repo import Repo
 from handlers.helpers import error_text, get_user, say
+from services import profile
 from services.scheduler import Reminders, parse_hhmm
 from services.tts import TTSService
 
@@ -38,11 +39,16 @@ def menu(user: dict) -> tuple[str, InlineKeyboardMarkup]:
             f"Голос: {VOICES.get(user['voice'], user['voice'])}\n"
             f"Скорость речи: {user['speech_rate']:+d}%\n"
             f"Текст под спойлером: {'да' if user['show_text'] else 'нет'}\n"
-            f"Напоминание: {user['reminder_time'] or 'выключено'}")
+            f"Напоминание: {user['reminder_time'] or 'выключено'}\n"
+            f"Цель дня: {user['daily_goal']} очков\n"
+            f"Роль собеседника: {profile.ROLES.get(user['partner_role'], profile.ROLES['friend'])[0]}\n"
+            f"Объяснения: {'по-русски' if user['ru_help'] else 'по-английски (без русского)'}")
     kb = InlineKeyboardMarkup(inline_keyboard=[
         [btn("🗣 Голос", "st:voice"), btn("🐢 Скорость", "st:rate")],
         [btn(f"👁 Показывать текст: {'да' if user['show_text'] else 'нет'}", "st:text")],
-        [btn("⏰ Время напоминания", "st:time")],
+        [btn("⏰ Время напоминания", "st:time"), btn("🎯 Цель дня", "st:goal")],
+        [btn("🎭 Роль собеседника", "st:role")],
+        [btn(f"🇷🇺 Объяснения: {'по-русски' if user['ru_help'] else 'по-английски'}", "st:ru")],
     ])
     return text, kb
 
@@ -126,6 +132,50 @@ async def on_toggle_text(cb: CallbackQuery, repo: Repo, config: Config) -> None:
 async def on_time_menu(cb: CallbackQuery) -> None:
     await cb.answer()
     await edit_or_answer(cb, "⏰ Когда напоминать об уроке? (Часовой пояс задаётся в .env: TIMEZONE)", time_kb())
+
+
+GOALS = [10, 20, 40, 60]
+
+
+@router.callback_query(F.data == "st:goal")
+async def on_goal_menu(cb: CallbackQuery) -> None:
+    await cb.answer()
+    rows = [[btn(f"{g} очков" + (" (≈1 урок)" if g == 20 else ""), f"st:g:{g}") for g in GOALS[:2]],
+            [btn(f"{g} очков", f"st:g:{g}") for g in GOALS[2:]]]
+    await edit_or_answer(cb, "🎯 Дневная цель в очках. Очко даёт слово в повторении, ответ в упражнении или "
+                             "реплика в разговоре (в разговоре 2 очка). Серия считается за дни с выполненной целью.",
+                         InlineKeyboardMarkup(inline_keyboard=rows))
+
+
+@router.callback_query(F.data.startswith("st:g:"))
+async def on_goal_pick(cb: CallbackQuery, repo: Repo, config: Config) -> None:
+    await cb.answer()
+    await repo.update_user(cb.from_user.id, daily_goal=int(cb.data[5:]))
+    await show_menu(cb, repo, config)
+
+
+@router.callback_query(F.data == "st:role")
+async def on_role_menu(cb: CallbackQuery) -> None:
+    await cb.answer()
+    rows = [[btn(label, f"st:o:{key}")] for key, (label, _) in profile.ROLES.items()]
+    await edit_or_answer(cb, "🎭 Кем будет собеседник в /talk и /chat?", InlineKeyboardMarkup(inline_keyboard=rows))
+
+
+@router.callback_query(F.data.startswith("st:o:"))
+async def on_role_pick(cb: CallbackQuery, repo: Repo, config: Config) -> None:
+    await cb.answer()
+    key = cb.data[5:]
+    if key in profile.ROLES:
+        await repo.update_user(cb.from_user.id, partner_role=key)
+    await show_menu(cb, repo, config)
+
+
+@router.callback_query(F.data == "st:ru")
+async def on_toggle_ru(cb: CallbackQuery, repo: Repo, config: Config) -> None:
+    await cb.answer()
+    user = await get_user(repo, cb.from_user, config)
+    await repo.update_user(cb.from_user.id, ru_help=0 if user["ru_help"] else 1)
+    await show_menu(cb, repo, config)
 
 
 async def save_time(message: Message, repo: Repo, reminders: Reminders, user_id: int, hhmm: str | None) -> None:

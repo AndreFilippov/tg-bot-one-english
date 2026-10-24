@@ -38,6 +38,7 @@ class TalkSummary(BaseModel):
     main_mistakes: list[str] = []
     rules: list[str] = []
     new_words: list[NewWord] = []
+    facts: list[str] = []
     comment: str = ""
 
 
@@ -78,6 +79,43 @@ class TestQuestion(BaseModel):
     topic_id: str
     ru: str
     en: str
+
+
+class PronunciationCheck(BaseModel):
+    recognized: bool = True
+    transcript: str = ""
+    score: int = 0
+    issues: list[str] = []
+    tip: str = ""
+
+
+class ListenQuestion(BaseModel):
+    q: str
+    options: list[str]
+    answer: int
+
+
+class ListenSet(BaseModel):
+    story: str
+    questions: list[ListenQuestion] = []
+
+
+class TranslateResult(BaseModel):
+    recognized: bool = True
+    source_text: str = ""
+    source_lang: str = "ru"
+    target_text: str = ""
+    note: str = ""
+
+
+class PracticeSet(BaseModel):
+    exercises: list[Exercise] = []
+
+
+class WordInfo(BaseModel):
+    word: str
+    translation: str
+    example: str = ""
 
 
 class QuizSet(BaseModel):

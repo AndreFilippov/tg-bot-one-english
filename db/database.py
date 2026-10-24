@@ -12,6 +12,16 @@ CREATE TABLE IF NOT EXISTS users (
     reminder_time TEXT,
     onboarded INTEGER DEFAULT 0,
     last_test TEXT,
+    nick TEXT,
+    age INTEGER,
+    city TEXT,
+    occupation TEXT,
+    goal TEXT,
+    interests TEXT DEFAULT '',
+    facts TEXT DEFAULT '[]',
+    daily_goal INTEGER DEFAULT 20,
+    partner_role TEXT DEFAULT 'friend',
+    ru_help INTEGER DEFAULT 1,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE IF NOT EXISTS words (
@@ -56,6 +66,34 @@ CREATE TABLE IF NOT EXISTS sessions (
     started_at TEXT DEFAULT CURRENT_TIMESTAMP,
     finished_at TEXT
 );
+CREATE TABLE IF NOT EXISTS activity (
+    user_id INTEGER NOT NULL,
+    day TEXT NOT NULL,
+    points INTEGER DEFAULT 0,
+    lessons INTEGER DEFAULT 0,
+    PRIMARY KEY (user_id, day)
+);
+CREATE TABLE IF NOT EXISTS pending_facts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    text TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS allowed_users (
+    user_id INTEGER PRIMARY KEY,
+    added_by INTEGER,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS api_usage (
+    day TEXT NOT NULL,
+    model TEXT NOT NULL,
+    count INTEGER DEFAULT 0,
+    PRIMARY KEY (day, model)
+);
+CREATE TABLE IF NOT EXISTS fsm (
+    key TEXT PRIMARY KEY,
+    state TEXT,
+    data TEXT DEFAULT '{}'
+);
 """
 
 
@@ -63,6 +101,16 @@ CREATE TABLE IF NOT EXISTS sessions (
 MIGRATIONS = [
     ("users", "onboarded", "INTEGER DEFAULT 0"),
     ("users", "last_test", "TEXT"),
+    ("users", "nick", "TEXT"),
+    ("users", "age", "INTEGER"),
+    ("users", "city", "TEXT"),
+    ("users", "occupation", "TEXT"),
+    ("users", "goal", "TEXT"),
+    ("users", "interests", "TEXT DEFAULT ''"),
+    ("users", "facts", "TEXT DEFAULT '[]'"),
+    ("users", "daily_goal", "INTEGER DEFAULT 20"),
+    ("users", "partner_role", "TEXT DEFAULT 'friend'"),
+    ("users", "ru_help", "INTEGER DEFAULT 1"),
 ]
 
 

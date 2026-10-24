@@ -10,9 +10,10 @@ from aiogram.types import Message
 
 from config import Config
 from db.repo import Repo
-from handlers.helpers import build_system, error_text, get_user
+from handlers.helpers import build_system, error_text, get_user, track
 from services.gemini import GeminiService
 from services.models import ChatTurn
+from services.profile import explain_lang
 from services.prompts import render
 
 log = logging.getLogger(__name__)
@@ -41,7 +42,7 @@ async def on_text(message: Message, state: FSMContext, repo: Repo, gemini: Gemin
     history = data["history"]
     hist_text = "\n".join(f"{who}: {t}" for who, t in history) or "(empty)"
     try:
-        turn = await gemini.generate_json(ChatTurn, render("chat", history=hist_text, text=message.text),
+        turn = await gemini.generate_json(ChatTurn, render("chat", history=hist_text, text=message.text, explain_lang=explain_lang(user)),
                                           await build_system(repo, user))
     except Exception as e:
         log.exception("chat turn failed")
@@ -55,6 +56,7 @@ async def on_text(message: Message, state: FSMContext, repo: Repo, gemini: Gemin
             text += f"\n❌ {html.escape(c.wrong)} → ✅ <b>{html.escape(c.right)}</b>\n   {html.escape(c.explanation)}"
             await repo.add_mistake(user["user_id"], c.wrong, c.right, c.explanation, type_="chat")
     await message.answer(text)
+    await track(repo, message, user["user_id"], 1)
     await state.update_data(history=(history + [["Student", message.text], ["Partner", turn.reply]])[-MAX_HISTORY:])
 
 
